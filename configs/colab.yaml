@@ -1,0 +1,78 @@
+# Configuration for Google Colab environment
+# Optimized for cloud execution with GPU support
+
+project:
+  name: "hands-on-ml"
+  version: "0.1.0"
+
+paths:
+  # In Colab, data is typically in /content or Google Drive
+  data_dir: "/content/data"
+  raw_data: "/content/data/raw"
+  processed_data: "/content/data/processed"
+  models_dir: "/content/models"
+  logs_dir: "/content/logs"
+
+  # Google Drive mount path (optional)
+  gdrive_mount: "/content/drive/MyDrive/HandsOnML"
+
+# MNIST experiment configuration (same as default)
+mnist:
+  data_file: "mnist_784.csv.zip"
+  test_size: 0.2
+  random_state: 42
+
+  model:
+    name: "knn"
+    params:
+      n_neighbors: 3
+      weights: "distance"
+
+  hyperparameter_search:
+    enabled: true
+    cv_folds: 4
+    param_grid:
+      n_neighbors: [3, 5, 7, 9, 10]
+      weights: ["uniform", "distance"]
+
+  augmentation:
+    enabled: true
+    shifts:
+      - [1, 0]
+      - [-1, 0]
+      - [0, 1]
+      - [0, -1]
+
+# Titanic experiment configuration
+titanic:
+  download_url: "https://homl.info/titanic.tgz"
+
+  features:
+    numerical: ["Age", "SibSp", "Parch", "Fare"]
+    categorical: ["Pclass", "Sex", "Embarked"]
+
+  models:
+    - name: "random_forest"
+      params:
+        n_estimators: 100
+        random_state: 42
+    - name: "svm"
+      params:
+        gamma: "auto"
+    - name: "knn"
+      params:
+        n_neighbors: 5
+
+  cross_validation:
+    cv_folds: 10
+    scoring: "accuracy"
+
+# Training settings - optimized for Colab
+training:
+  random_state: 42
+  n_jobs: 2  # Colab has limited cores, be conservative
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
